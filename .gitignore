@@ -1,2 +1,13 @@
 *.class
 *.log
+.bsp/
+
+### IDEA
+.idea/
+
+### SBT
+target/
+
+.vscode
+.metals
+.DS_Store
