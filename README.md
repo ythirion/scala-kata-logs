@@ -6,6 +6,7 @@ This repository contains kata starter projects to learn TDD toward refactoring l
 
 ### Basic TDD
 - [FizzBuzz](FizzBuzzKata/README.md)
+- [Money problem](MoneyProblemKata/README.md)
 - [Bowling](BowlingKata/README.md)
 - [Manhattan distance](ManhattanDistanceKata/README.md)
 
