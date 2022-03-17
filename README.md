@@ -5,7 +5,7 @@ This repository contains kata starter projects to learn TDD toward refactoring l
 [Source by Philippe Bourgau](https://philippe.bourgau.net/a-coding-dojo-exercises-plan-towards-refactoring-legacy-code/)
 
 ### Basic TDD
-- [FizzBuzz](FizzBuzz/README.md)
+- [FizzBuzz](FizzBuzzKata/README.md)
 - [Bowling](BowlingKata/README.md)
 - [Manhattan distance](ManhattanDistanceKata/README.md)
 
