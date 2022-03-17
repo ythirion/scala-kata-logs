@@ -30,7 +30,7 @@ This repository contains kata starter projects to learn TDD toward refactoring l
 - [Object Calisthenics constraint](constraints/ObjectCalisthenics.md)
 
 ### Legacy code refactoring
-- Gilded Rose
+- [Gilded Rose](GildedRoseKata/README.md)
 - Ugly trivia game
 - Theatre Players
 
