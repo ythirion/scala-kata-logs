@@ -31,8 +31,8 @@ This repository contains kata starter projects to learn TDD toward refactoring l
 
 ### Legacy code refactoring
 - [Gilded Rose](GildedRoseKata/README.md)
-- Ugly trivia game
-- Theatre Players
+- [Ugly trivia game](TriviaKata/README.md)
+- [Theatrical Players Kata](TheatricalPlayersKata/README.md)
 
 ### Domain Driven Design
 - [Order Shipping (Tell don't ask) Kata](OrderShippingKata/README.md)
