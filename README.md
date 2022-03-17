@@ -26,18 +26,12 @@ This repository contains kata starter projects to learn TDD toward refactoring l
 ### TDD on algorithms
 - [Diamond](DiamondKata/README.md)
 - [Kata Lags](LagsKata/README.md)
-- Anagrams
-- [Cyclomatic Complexity One constraint](docs/contraints/CyclomaticComplexityOne.md)
-- [Object Calisthenics constraint](docs/contraints/ObjectCalisthenics.md)
+- [Object Calisthenics constraint](constraints/ObjectCalisthenics.md)
 
-
-### Legacy code refactoring katas
+### Legacy code refactoring
 - Gilded Rose
 - Ugly trivia game
+- Theatre Players
 
-### Other katas
-- [Approval Kata](ApprovalKata/README.md)
+### Domain Driven Design
 - [Order Shipping (Tell don't ask) Kata](OrderShippingKata/README.md)
-- [Functional Programming in C# Kata](LanguageExtKata/README.md)
-- Other [refactoring katas](https://kata-log.rocks/refactoring)
-- Other [refactoring katas](https://kata-log.rocks/refactoring)
