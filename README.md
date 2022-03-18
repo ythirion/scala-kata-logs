@@ -56,6 +56,8 @@ Durink katas you can add different constraints to discover concepts
 - [Functional Programming Design Patterns](https://github.com/ythirion/scala-fp-guidelines)
 - [Mutation Testing](https://github.com/ythirion/mutation-demo)
 - [Clean Architecture](https://yoan-thirion.gitbook.io/knowledge-base/software-craftsmanship/code-katas/clean-architecture)
+- [Libyear](https://libyear.com/)
+- [Mob programming](https://mobprogramming.org/mob-programming-basics/)
 - [Consumer-Driven Contract Testing](https://github.com/ythirion/pact-jvm-demo)
 
 ## Tools
