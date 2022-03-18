@@ -1,14 +1,13 @@
+*.class
+*.log
+.bsp/
 
 ### IDEA
 .idea/
 
 ### SBT
 target/
-*.class
-*.log
-.bsp/
 
+## Mac OS
 
-.vscode
-.metals
 .DS_Store
