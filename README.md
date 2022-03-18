@@ -13,14 +13,6 @@ This repository contains kata starter projects to learn TDD toward refactoring l
 - [Money problem](MoneyProblemKata/README.md)
 - [Yahtzee](YahtzeeKata/README.md)
 - [Mars Rover](MarsRoverKata/README.md)
-    - [No primitive constraint](constraints/NoPrimitive.md)
-    - [Tell! Don't Ask constraint](constraints/TellDontAsk.md)
-    - [CQS constraint](constraints/CQS.md)
-
-### Refactoring fresh code
-- Continue design katas on 2 or more sessions
-- Always compile Constraint
-- [Cyclomatic Complexity One constraint](constraints/CyclomaticComplexityOne.md)
 
 ### Outside-In TDD
 - [Bank kata](BankingKata/README.md)
@@ -28,7 +20,6 @@ This repository contains kata starter projects to learn TDD toward refactoring l
 ### TDD on algorithms
 - [Diamond](DiamondKata/README.md)
 - [Kata Lags](LagsKata/README.md)
-- [Object Calisthenics constraint](constraints/ObjectCalisthenics.md)
 
 ### Legacy code refactoring
 - [Gilded Rose](GildedRoseKata/README.md)
@@ -39,3 +30,17 @@ This repository contains kata starter projects to learn TDD toward refactoring l
 
 ### Domain Driven Design
 - [Order Shipping (Tell don't ask) Kata](OrderShippingKata/README.md)
+
+### Crappy-Driven Development
+- [Crappy-Driven Development](CrappyKata/README.md)
+
+### Constraints that can be added
+- [No primitive constraint](constraints/NoPrimitive.md)
+- [Tell! Don't Ask constraint](constraints/TellDontAsk.md)
+- [CQS constraint](constraints/CQS.md)
+- [Object Calisthenics constraint](constraints/ObjectCalisthenics.md)
+- [Cyclomatic Complexity One constraint](constraints/CyclomaticComplexityOne.md)
+- Always compile : never be in a broken state
+- [Other constraints](http://tddbuddy.com/reference/Constraint%20List.pdf)
+
+### Other topics to discover
