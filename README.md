@@ -6,15 +6,16 @@ This repository contains kata starter projects to learn TDD toward refactoring l
 
 ### Basic TDD
 - [FizzBuzz](FizzBuzzKata/README.md)
-- [Money problem](MoneyProblemKata/README.md)
 - [Bowling](BowlingKata/README.md)
 - [Manhattan distance](ManhattanDistanceKata/README.md)
 
 ### Designing with TDD
+- [Money problem](MoneyProblemKata/README.md)
+- [Yahtzee](YahtzeeKata/README.md)
 - [Mars Rover](MarsRoverKata/README.md)
-- [No primitive constraint](constraints/NoPrimitive.md)
-- [Tell! Don't Ask constraint](constraints/TellDontAsk.md)
-- [CQS constraint](constraints/CQS.md)
+    - [No primitive constraint](constraints/NoPrimitive.md)
+    - [Tell! Don't Ask constraint](constraints/TellDontAsk.md)
+    - [CQS constraint](constraints/CQS.md)
 
 ### Refactoring fresh code
 - Continue design katas on 2 or more sessions
