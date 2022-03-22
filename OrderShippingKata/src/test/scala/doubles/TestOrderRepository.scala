@@ -14,4 +14,6 @@ class TestOrderRepository extends OrderRepository {
 
   override def getById(orderId: Int): Option[Order] =
     orders.find(o => o.id == orderId)
+
+  def addOrder(order: Order): Unit = orders += order
 }

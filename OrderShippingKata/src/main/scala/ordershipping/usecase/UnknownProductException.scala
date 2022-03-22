@@ -1,3 +1,3 @@
 package ordershipping.usecase
 
-case class UnknownProductException() extends Exception
+final case class UnknownProductException() extends Exception
