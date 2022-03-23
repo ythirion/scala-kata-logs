@@ -32,7 +32,7 @@ class OrderApprovalUseCaseTest
 
     useCase.run(request)
 
-    val savedOrder = orderRepository.insertedOrder
+    val savedOrder = orderRepository.savedOrder()
     savedOrder.status shouldBe OrderStatus.Approved
   }
 
@@ -43,7 +43,7 @@ class OrderApprovalUseCaseTest
 
     useCase.run(request)
 
-    val savedOrder = orderRepository.insertedOrder
+    val savedOrder = orderRepository.savedOrder()
     savedOrder.status shouldBe OrderStatus.Rejected
   }
 
@@ -55,7 +55,7 @@ class OrderApprovalUseCaseTest
     assertThrows[RejectedOrderCannotBeApprovedException] {
       useCase.run(request)
     }
-    orderRepository.insertedOrder shouldBe null
+    orderRepository.savedOrder() shouldBe null
   }
 
   "order approval use case" should "can not reject approved order" in {
@@ -66,7 +66,7 @@ class OrderApprovalUseCaseTest
     assertThrows[ApprovedOrderCannotBeRejectedException] {
       useCase.run(request)
     }
-    orderRepository.insertedOrder shouldBe null
+    orderRepository.savedOrder() shouldBe null
   }
 
   "order approval use case" should "can not reject shipped order" in {
@@ -77,6 +77,6 @@ class OrderApprovalUseCaseTest
     assertThrows[ShippedOrdersCannotBeChangedException] {
       useCase.run(request)
     }
-    orderRepository.insertedOrder shouldBe null
+    orderRepository.savedOrder() shouldBe null
   }
 }
