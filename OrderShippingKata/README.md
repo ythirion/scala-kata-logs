@@ -5,13 +5,15 @@ Refactoring Kata, allowing to manipulate multiple concepts and techniques:
  * Eventually use the [Mikado Method](https://www.methodsandtools.com/archive/mikado.php) or a phase of [Exploratory Refactoring](https://understandlegacycode.com/blog/demine-codebase-with-exploratory-refactoring/)
  * Eventually apply the [Tell! Don't ask!](https://kata-log.rocks/tell-dont-ask) constraint
  * Eventually apply the [Object Calisthenics](https://williamdurand.fr/2013/06/03/object-calisthenics/) rules
+ * Apply [Parse, don't validate](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/) principle (Type-driven design)
 
 A kanban, to follow all the refactoring steps you identify, is higly recommended
 
 Original: [Gabriele Tondi's version](https://github.com/racingDeveloper/tell-dont-ask-kata)
 
-C# updated template (.Net 6).
 ## How To
+
 You have to take the responsability of an application where the former developers first experimented the clean architecture.
 [![Clean architecture schema from cleancoder](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+
 This application being responsible of many bugs, you are tasked with refactoring it to make it more maintainable and reliable
