@@ -37,6 +37,8 @@ This repository contains kata starter projects to learn TDD toward refactoring l
 ### Crappy-Driven Development
 - [Crappy-Driven Development](CrappyKata/README.md)
 
+![kata](img/kata.png)
+
 ## Constraints that can be added
 Durink katas you can add different constraints to discover concepts
 - [No primitive constraint](constraints/NoPrimitive.md)
