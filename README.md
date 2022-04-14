@@ -24,6 +24,7 @@ This repository contains kata starter projects to learn TDD toward refactoring l
 ### Legacy code refactoring
 - [Refactoring journey](https://github.com/ythirion/refactoring-journey)
 - [Gilded Rose](GildedRoseKata/README.md)
+- [Yatzy refactoring kata](YatzyRefactoringKata/README.md)
 - [Elections](ElectionsKata/README.md)
 - [Ugly trivia game](TriviaKata/README.md)
 - [Trip service](TripServiceKata/README.md)
