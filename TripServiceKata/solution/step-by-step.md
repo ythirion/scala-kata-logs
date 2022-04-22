@@ -519,8 +519,8 @@ breakable {
 > The whole point of objects is that they are a technique to package data with the processes used on that data. A classic smell is a method that seems more interested in a class other than the one it is in. The most common focus of the envy is the data.
 
 - Let's fix it by using TDD (Test Driven Development)
-
-- ![img.png](img/tdd.png)
+![img.png](img/tdd.png)
+- Implement a new behavior on `User` : `isFriendWith` 
 
 ```scala
 class UserSpec extends UnitSpec {
@@ -662,7 +662,7 @@ def getTripsByUser(user: User): List[Trip] = {
   }
 ```
 
-### Be transparency in your contracts
+### Be transparent in your contracts
 - For this kind of guard we should favor continuation
   - If we do so we should change the return type of our method as well to represent the computation issue that could be raised
   - In other terms we should use a monad
@@ -1011,10 +1011,11 @@ object UserBuilder {
   - Extract Method
   - Change Signature
   - Rename
+- Use `Higher Order Functions` to avoid duplication
 - Use code coverage as a driver
 - Test Data Builder
 - Feature Envy
-- TDD
+- Intro to TDD
 
 Sources : 
 - [Nicolas Carlo - understand legacy code](https://understandlegacycode.com/blog/key-points-of-working-effectively-with-legacy-code/#identify-seams-to-break-your-code-dependencies)
