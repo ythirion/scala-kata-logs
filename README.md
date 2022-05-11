@@ -28,7 +28,7 @@ This repository contains kata starter projects to learn TDD toward refactoring l
 - [Elections](ElectionsKata/README.md)
 - [Ugly trivia game](TriviaKata/README.md)
 - [Trip service](TripServiceKata/README.md)
-- [Mikado Method and Test Data Builders](https://github.com/ythirion/mikado-testbuilders-kata/blob/master/README.md)
+- [Mikado Method and Test Data Builders](Mikado-Testbuilders-Kata/README.md)
 - [Theatrical Players Kata](TheatricalPlayersKata/README.md)
 
 ### Design
