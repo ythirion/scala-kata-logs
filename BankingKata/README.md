@@ -5,15 +5,25 @@
 Think of your personal bank account experience
 When in doubt, go for the simplest solution
 
-## Requirements
+## Problem Description
+Create a simple bank application with the following features :
+- Deposit into Account
+- Withdraw from an account
+- Print a bank statement to the console
 
-- [ ] Deposit and Withdrawal
-- [ ] Account statement (date, amount, balance)
-- [ ] Statement printing
-- [ ] Transfer
-- [ ] Statement filters (just deposits, withdrawal, date)
-- [ ] Account status (open, closed, frozen)
+## Starting points and Constraints
+1. Start with a class following this structure:
+````scala
+class Account {
+  def deposit(amount: Int): Either[String, Account]
+  def withdraw(amount: Int): Either[String, Account] 
+  def printStatement(printer: String => Unit): Unit
+}
+````
+- Account must stay immutable
 
+2. You are not allowed to add any other `public` function
+3. Use `String` and `Int` for dates and amounts (keep it simple)
 
 ## BDD
 
