@@ -88,7 +88,7 @@ TripDAO.findTripsByUser(user)
 ### Coverage as a Driver
 - Run your favorite `code coverage` tool
 - Use the result as a driver for implementing/writing new tests
-![Code coverage](img/coverage.png)
+![Code coverage](solution/img/coverage.png)
 - `From shortest to deepest branch`, what is our next test to write ?
 - Think about FIRST principles :
   - We have introduced a strong dependency between our tests through the `loggedUser`
