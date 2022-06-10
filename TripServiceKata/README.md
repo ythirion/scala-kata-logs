@@ -5,7 +5,7 @@ The end result should be well-crafted code that express the domain.
 
 ![Legacy code refactoring](solution/img/legacy-code-refactoring.png)
 - Legacy code golden rule :
-`You cannot change any existing code if not covered by tests.`
+  `You cannot change any existing code if not covered by tests.`
   - The only exception is if we need to change the code to add unit tests, but in this case, just automated refactorings (via IDE) are allowed.
 - Step-by-step solution available [here](solution/step-by-step.md)
 
@@ -107,7 +107,7 @@ TripDAO.findTripsByUser(user)
   - Give sense to those by naming them
 - Let's cover the `happy path`
 
-### What can be improved ?
+### What can be improved ? [Optional]
 - Duplications in our tests ?
   - And some test setups already require some cognitive resources to understand what is going on :
 ```scala
@@ -155,7 +155,7 @@ breakable {
 - Let's fix it by using TDD (Test Driven Development)
 ![img.png](solution/img/tdd.png)
 - Implement a new behavior on `User` : `isFriendWith`
-  - By starting with a test : `"User" should "inform when users are friends" in {`
+  - By starting with a test : `"User" should "inform when users are not friends" in {`
 - Add a second test case : the passing one
 - We can now use it in our `TripService`
   - Run your tests at any change in your production code
@@ -201,7 +201,7 @@ breakable {
 - Break the internal dependency by injecting the `loggedInUser` in our method
 - Let's use our IDE for that -> `Change signature...` 
   - `⌘ + F6`
-![Change signature](solution/img/change-signature.png)
+  ![Change signature](solution/img/change-signature.png)
 - Fix the tests by passing the `loggedInUser`
 - Use the `loggedInUser` passed in method argument
 - We can now remove the `getLoggedUser` method
@@ -225,7 +225,7 @@ breakable {
 - Use the new dependency in our Service
 - Run the tests
   - We should receive an error because we have not configured the `TripDAO` stub
-![Mock no set up](solution/img/mock-error.png)
+  ![Mock no set up](solution/img/mock-error.png)
 - Setup our stub
 
 ## Surface refactoring
