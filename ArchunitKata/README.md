@@ -76,12 +76,15 @@ private val `no classes should depend on another`: ArchRule =
 ```
 
 ### Exercises
+
 Recommended order:
 - `LayeredArchitectureTests`
 - `NamingConventionTests`
 - `GuidelineTests`
 - `LinguisticAntiPatternsTests`
 - `MethodsReturnTypesTests`
+
+Which other `rules` could be added?
 
 ### Solution
 Solution is available in the `solution` folder

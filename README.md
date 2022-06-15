@@ -36,6 +36,7 @@ This repository contains kata starter projects to learn TDD toward refactoring l
 - [S.O.L.I.D](https://github.com/ythirion/solid-kata)
 - [DDD / Order Shipping (Tell don't ask) Kata](OrderShippingKata/README.md)
 - [Functional Programming Guidelines](https://github.com/ythirion/scala-fp-guidelines)
+- [Test your Architecture with ArchUnit](ArchUnitKata/README.md)
 
 ### Crappy-Driven Development
 - [Crappy-Driven Development](CrappyKata/README.md)
