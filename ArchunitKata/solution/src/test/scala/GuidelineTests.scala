@@ -1,14 +1,8 @@
-import GuidelineTests.*
-import com.tngtech.archunit.core.domain.{JavaCodeUnit, JavaMember, JavaMethod}
-import com.tngtech.archunit.core.importer.ClassFileImporter
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.{classes, fields, noClasses}
-import com.tngtech.archunit.lang.syntax.elements.*
-import com.tngtech.archunit.lang.{ArchCondition, ArchRule, ConditionEvents, SimpleConditionEvent}
+import GuidelineTests._
+import com.tngtech.archunit.lang.ArchRule
+import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.{classes, noClasses}
 import com.tngtech.archunit.library.GeneralCodingRules
-import com.tngtech.archunit.library.dependencies.SlicesRuleDefinition
 import com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices
-import org.scalatest.funspec.AnyFunSpec
 
 class GuidelineTests extends ArchUnitFunSpec(
   "Our team guidelines",
