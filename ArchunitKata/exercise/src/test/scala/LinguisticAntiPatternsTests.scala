@@ -1,8 +1,7 @@
+import ArchUnitFunSpec.emptyRule
 import LinguisticAntiPatternsTests._
-import com.tngtech.archunit.core.domain.JavaMethod
 import com.tngtech.archunit.lang._
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.priority
-import com.tngtech.archunit.lang.syntax.elements.{CodeUnitsShould, CodeUnitsShouldConjunction, GivenMembersConjunction}
+
 
 class LinguisticAntiPatternsTests extends ArchUnitFunSpec(
   "Linguistic Anti Patterns",
@@ -13,37 +12,15 @@ class LinguisticAntiPatternsTests extends ArchUnitFunSpec(
 )
 
 object LinguisticAntiPatternsTests {
-  private val `no get function can return Unit`: ArchRule =
-    priority(Priority.HIGH)
-      .methods()
-      .that().haveNameMatching("get[A-Z].*")
-      .asInstanceOf[GivenMembersConjunction[JavaMethod]]
-      .should(notBeVoid)
+  // You will have to cast with `asInstanceOf` in several Rules
+  // example : .asInstanceOf[GivenMembersConjunction[JavaMethod]] or .asInstanceOf[CodeUnitsShould[CodeUnitsShouldConjunction[JavaMethod]]]
 
-  private val `iser and haser should return booleans`: ArchRule =
-    priority(Priority.HIGH)
-      .methods()
-      .that().haveNameMatching("is[A-Z].*")
-      .asInstanceOf[GivenMembersConjunction[JavaMethod]]
-      .or().haveNameMatching("has[A-Z].*")
-      .should()
-      .asInstanceOf[CodeUnitsShould[CodeUnitsShouldConjunction[JavaMethod]]]
-      .haveRawReturnType(classOf[Boolean])
+  private val `no get function can return Unit`: ArchRule = emptyRule
+    .as("No methods starting with get should retun a Unit / void")
 
-  private val `setters should not return something`: ArchRule =
-    priority(Priority.HIGH)
-      .methods()
-      .that().haveNameMatching("set[A-Z].*")
-      .asInstanceOf[GivenMembersConjunction[JavaMethod]]
-      .should()
-      .asInstanceOf[CodeUnitsShould[CodeUnitsShouldConjunction[JavaMethod]]]
-      .haveRawReturnType("void")
+  private val `iser and haser should return booleans`: ArchRule = emptyRule
+    .as("No methods starting with is or has should return something else than a Boolean")
 
-  def notBeVoid: ArchCondition[JavaMethod] = new ArchCondition[JavaMethod]("not return void") {
-    override def check(method: JavaMethod, events: ConditionEvents): Unit = {
-      val matches = !("void" == method.getRawReturnType.getName)
-      val message = s"${method.getFullName} returns ${method.getRawReturnType.getName}"
-      events.add(new SimpleConditionEvent(method, matches, message))
-    }
-  }
+  private val `setters should not return something`: ArchRule = emptyRule
+    .as("No methods starting with set should return something")
 }

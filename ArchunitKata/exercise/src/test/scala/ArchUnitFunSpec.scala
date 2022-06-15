@@ -1,5 +1,6 @@
 import com.tngtech.archunit.core.importer.ClassFileImporter
 import com.tngtech.archunit.lang.ArchRule
+import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
 import org.scalatest.funspec.AnyFunSpec
 
 abstract class ArchUnitFunSpec(private val name: String,
@@ -14,4 +15,10 @@ abstract class ArchUnitFunSpec(private val name: String,
       }
     }
   }
+}
+
+object ArchUnitFunSpec {
+  val emptyRule: ArchRule = noClasses()
+    .should()
+    .be("Dummy")
 }

@@ -1,6 +1,6 @@
+import ArchUnitFunSpec.emptyRule
 import LayeredArchitectureTests._
 import com.tngtech.archunit.lang.ArchRule
-import com.tngtech.archunit.library.Architectures.layeredArchitecture
 
 class LayeredArchitectureTests extends ArchUnitFunSpec(
   "Layered architecture",
@@ -14,13 +14,9 @@ object LayeredArchitectureTests {
   private val model = "Model"
   private val dal = "DAL"
 
-  private val `layered architecture is respected`: ArchRule = layeredArchitecture()
-    .layer(controller).definedBy("..controller..")
-    .layer(service).definedBy("..service..")
-    .layer(model).definedBy("..model..")
-    .layer(dal).definedBy("..repository..")
-    .whereLayer(controller).mayNotBeAccessedByAnyLayer()
-    .whereLayer(service).mayOnlyBeAccessedByLayers(controller)
-    .whereLayer(dal).mayOnlyBeAccessedByLayers(service)
-    .as("We should respect our Layer definition")
+  private val `layered architecture is respected`: ArchRule = emptyRule
+    .as("Detail your layer architecture here " +
+      "Controller can not be accessed by another layer " +
+      "Service can only be accessed by Controller" +
+      "Dal can only be accessed by Service")
 }

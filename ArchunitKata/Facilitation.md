@@ -44,11 +44,44 @@ abstract class ArchUnitFunSpec(private val name: String, // Name of the tests
     }
   }
 }
+
+object ArchUnitFunSpec {
+  val emptyRule: ArchRule = noClasses()
+    .should()
+    .be("Dummy")
+}
 ```
 
 - Test classes have been provided but implementations are missing
   - You have to fill the gap to implement the rule expressed in plain text english correctly
+    - Do it for each rule using the `emptyRule`
   - If you want you can `fix` the production code based on the `ArchRule` discoveries - *Optional*
+
+### Example
+```scala
+private val `no classes should depend on another`: ArchRule =
+    emptyRule
+      .as("Class with name SomeExample should not depend on Other")
+```
+
+- We use the `ArchUnit` dsl to write it
+  - Let the public `api` guide you
+
+```scala
+private val `no classes should depend on another`: ArchRule =
+    noClasses()
+          .that().haveSimpleName("SomeExample")
+          .should()
+          .dependOnClassesThat().haveSimpleName("Other")
+```
+
+### Exercises
+Recommended order:
+- `LayeredArchitectureTests`
+- `NamingConventionTests`
+- `GuidelineTests`
+- `LinguisticAntiPatternsTests`
+- `MethodsReturnTypesTests`
 
 ### Solution
 Solution is available in the `solution` folder

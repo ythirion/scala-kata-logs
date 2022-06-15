@@ -1,3 +1,4 @@
+import ArchUnitFunSpec.emptyRule
 import MethodsReturnTypesTests.{`command handlers should only return Int`, `controllers public methods should only return ApiResponse[T]`}
 import com.tngtech.archunit.base.{DescribedPredicate, PackageMatcher}
 import com.tngtech.archunit.core.domain.JavaModifier.PUBLIC
@@ -5,10 +6,6 @@ import com.tngtech.archunit.core.domain.properties.HasModifiers
 import com.tngtech.archunit.core.domain.properties.HasModifiers.Predicates.modifier
 import com.tngtech.archunit.core.domain.{JavaClasses, JavaMember, JavaMethod}
 import com.tngtech.archunit.lang._
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.{all, methods}
-import com.tngtech.archunit.lang.syntax.elements.GivenMembersConjunction
-import examples.CommandHandler
-import examples.models.ApiResponse
 
 import java.lang
 import scala.collection.JavaConverters._
@@ -20,18 +17,13 @@ class MethodsReturnTypesTests extends ArchUnitFunSpec(
   `controllers public methods should only return ApiResponse[T]`)
 
 object MethodsReturnTypesTests {
-  private val `command handlers should only return Int`: ArchRule =
-    methods().that()
-      .areDeclaredIn(classOf[CommandHandler])
-      .asInstanceOf[GivenMembersConjunction[JavaMethod]]
-      .should(returnType(classOf[Int]))
-      .as("Func CommandHandler trait should only return Int")
+  // You can use helper methods defined below
 
-  private val `controllers public methods should only return ApiResponse[T]` =
-    all(allMethods().that(areInPackage(PackageMatcher.of("..controllers.."))))
-      .that(arePublic)
-      .should(returnType(classOf[ApiResponse[Any]], classOf[Unit]))
-      .as("Controllers should only return APIResponse[T]")
+  private val `command handlers should only return Int`: ArchRule = emptyRule
+    .as("Methods declared in CommandHandler classes can only return Int")
+
+  private val `controllers public methods should only return ApiResponse[T]` = emptyRule
+    .as("Public methods declared in Controllers should always return APIResponse[T]")
 
   def areInPackage(packageMatcher: PackageMatcher): DescribedPredicate[JavaMember] = new DescribedPredicate[JavaMember]("are in " + packageMatcher) {
     override def apply(member: JavaMember): Boolean = packageMatcher.matches(member.getOwner.getPackage.getName)

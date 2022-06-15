@@ -1,7 +1,6 @@
+import ArchUnitFunSpec.emptyRule
 import NamingConventionTests._
 import com.tngtech.archunit.lang.ArchRule
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes
-import examples.CommandHandler
 
 class NamingConventionTests extends ArchUnitFunSpec(
   "Naming convention",
@@ -11,14 +10,9 @@ class NamingConventionTests extends ArchUnitFunSpec(
 )
 
 object NamingConventionTests {
-  private val `services should be suffixed by Service`: ArchRule =
-    classes()
-      .that().resideInAPackage("..service..")
-      .should().haveSimpleNameEndingWith("Service")
+  private val `services should be suffixed by Service`: ArchRule = emptyRule
+    .as("All the Service class should be the Service package")
 
-  private val `command handler should be suffixed by CommandHandler`: ArchRule =
-    classes()
-      .that()
-      .implement(classOf[CommandHandler])
-      .should().haveSimpleNameEndingWith("CommandHandler")
+  private val `command handler should be suffixed by CommandHandler`: ArchRule = emptyRule
+      .as("All the classes implementing CommandHandler should contain CommandHandler in their name")
 }
