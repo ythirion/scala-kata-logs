@@ -1,8 +1,7 @@
-import LinguisticAntiPatternsTests.*
+import LinguisticAntiPatternsTests._
 import com.tngtech.archunit.core.domain.JavaMethod
-import com.tngtech.archunit.lang.*
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.{methods, priority}
+import com.tngtech.archunit.lang._
+import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.priority
 import com.tngtech.archunit.lang.syntax.elements.{CodeUnitsShould, CodeUnitsShouldConjunction, GivenMembersConjunction}
 
 class LinguisticAntiPatternsTests extends ArchUnitFunSpec(

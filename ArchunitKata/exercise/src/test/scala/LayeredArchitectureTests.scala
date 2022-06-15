@@ -1,8 +1,6 @@
-import LayeredArchitectureTests.*
-import com.tngtech.archunit.core.importer.ClassFileImporter
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.priority
-import com.tngtech.archunit.lang.{ArchRule, Priority}
-import com.tngtech.archunit.library.Architectures.{layeredArchitecture, onionArchitecture}
+import LayeredArchitectureTests._
+import com.tngtech.archunit.lang.ArchRule
+import com.tngtech.archunit.library.Architectures.layeredArchitecture
 
 class LayeredArchitectureTests extends ArchUnitFunSpec(
   "Layered architecture",
