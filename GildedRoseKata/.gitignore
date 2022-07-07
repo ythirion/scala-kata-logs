@@ -17,3 +17,6 @@
 .classpath
 
 target/
+
+# Approval Testing
+*.received
