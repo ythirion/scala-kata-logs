@@ -442,8 +442,10 @@ Congratulations, you killed all the mutants. `General Stryker` would be proud of
 Think about what we did today. 
 If you had to explain the main idea of the topic to someone else, what would you say?
 
-## Sources 
+## Resources 
 - [Approval Tests](https://approvaltests.com/)
-- 
+- [Mutation Testing](https://xtrem-tdd.netlify.app/Flavours/mutation-testing)
+- [ScalaStyle with sbt](http://www.scalastyle.org/sbt.html)
+- [Stryker4s](https://stryker-mutator.io/docs/stryker4s/getting-started/)
 
 <a href="https://www.youtube.com/watch?v=zyM2Ep28ED8" rel="Emily Bache's video">![Emily Bache's video](img/video.png)</a>
