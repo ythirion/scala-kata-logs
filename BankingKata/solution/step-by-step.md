@@ -121,7 +121,7 @@ Let's think about test cases for the deposit:
 Passing Sequence:
 ![Deposit passing Use Case](img/deposit-passing-use-case.png)
 
-Let's create a folder `Deposit` in our tests and create a new test class `DepositShould`
+Let's create a new test class `DepositShould`
 
 #### Non-passing test
 Based on our sequence diagram, we can design the test by knowing what we will need to make it pass.
@@ -235,3 +235,89 @@ case class Account(id: UUID) {
 }
 ```
 
+:large_blue_circle: We have some potential improvement in the tests
+
+```scala
+class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
+  private val accountRepositoryStub = stub[AccountRepository]
+  // Declare the same command for both tests
+  // Instantiate the UseCase here
+  
+  it should "return a failure for a non existing account" in {
+    val deposit = Deposit(UUID.randomUUID(), 1000)
+    val depositUseCase = new DepositUseCase(accountRepositoryStub)
+
+    (accountRepositoryStub.find _)
+      .when(deposit.accountId)
+      .returns(None)
+
+    depositUseCase.invoke(deposit).left.get mustBe "Unknown account"
+  }
+
+  it should "store the account for an existing account" in {
+    // We know we will use Account in a lot of tests
+    // Let's encapsulate its creation through a Builder
+    val account: Account = Account(UUID.randomUUID())
+    val deposit = Deposit(account.id, 1000)
+    val depositUseCase = new DepositUseCase(accountRepositoryStub)
+
+    (accountRepositoryStub.find _)
+      .when(account.id)
+      .returns(Some(account))
+
+    val newAccount = depositUseCase.invoke(deposit)
+
+    newAccount.isRight mustBe true
+    (accountRepositoryStub.save _)
+      .verify(newAccount.right.value)
+      .once()
+  }
+}
+```
+
+Removed duplication
+```scala
+class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
+  private val accountRepositoryStub = stub[AccountRepository]
+  private val deposit = Deposit(UUID.randomUUID(), 1000)
+  private val depositUseCase: DepositUseCase = new DepositUseCase(accountRepositoryStub)
+
+  it should "return a failure for a non existing account" in {
+    (accountRepositoryStub.find _)
+      .when(deposit.accountId)
+      .returns(None)
+
+    depositUseCase.invoke(deposit).left.get mustBe "Unknown account"
+  }
+
+  it should "store the account for an existing account" in {
+    val account: Account = Account(deposit.accountId)
+
+    (accountRepositoryStub.find _)
+      .when(account.id)
+      .returns(Some(account))
+
+    val newAccount = depositUseCase.invoke(deposit)
+
+    newAccount.isRight mustBe true
+    (accountRepositoryStub.save _)
+      .verify(newAccount.right.value)
+      .once()
+  }
+}
+```
+
+Create a builder for `Account`
+```scala
+class AccountBuilder(private val accountId: UUID) {
+  def build(): Account = domain.Account(accountId)
+}
+
+object AccountBuilder {
+  def aNewAccount(accountId: UUID = UUID.randomUUID()): AccountBuilder =
+    new AccountBuilder(accountId)
+}
+
+// its usage
+val account: Account = aNewAccount(deposit.accountId).build()
+```

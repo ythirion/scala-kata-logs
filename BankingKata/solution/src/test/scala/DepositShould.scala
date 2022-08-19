@@ -1,5 +1,4 @@
-package Deposit
-
+import AccountBuilder.aNewAccount
 import banking.commands.Deposit
 import banking.domain.{Account, AccountRepository}
 import banking.usecases.DepositUseCase
@@ -12,11 +11,10 @@ import java.util.UUID
 
 class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
   private val accountRepositoryStub = stub[AccountRepository]
+  private val deposit = Deposit(UUID.randomUUID(), 1000)
+  private val depositUseCase: DepositUseCase = new DepositUseCase(accountRepositoryStub)
 
   it should "return a failure for a non existing account" in {
-    val deposit = Deposit(UUID.randomUUID(), 1000)
-    val depositUseCase = new DepositUseCase(accountRepositoryStub)
-
     (accountRepositoryStub.find _)
       .when(deposit.accountId)
       .returns(None)
@@ -25,9 +23,7 @@ class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with 
   }
 
   it should "store the account for an existing account" in {
-    val account: Account = Account(UUID.randomUUID())
-    val deposit = Deposit(account.id, 1000)
-    val depositUseCase = new DepositUseCase(accountRepositoryStub)
+    val account: Account = aNewAccount(deposit.accountId).build()
 
     (accountRepositoryStub.find _)
       .when(account.id)
