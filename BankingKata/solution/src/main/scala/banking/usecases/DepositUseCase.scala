@@ -1,9 +1,9 @@
 package banking.usecases
 
 import banking.commands.Deposit
-import banking.domain.{Account, AccountRepository}
+import banking.domain.{Account, AccountRepository, Clock}
 
-class DepositUseCase(accountRepository: AccountRepository) {
+class DepositUseCase(accountRepository: AccountRepository, clock: Clock) {
   def invoke(deposit: Deposit): Either[String, Account] = {
     accountRepository.find(deposit.accountId) match {
       case Some(account) => makeDeposit(account, deposit.amount)
@@ -12,7 +12,7 @@ class DepositUseCase(accountRepository: AccountRepository) {
   }
 
   private def makeDeposit(account: Account, amount: Double): Either[String, Account] = {
-    account.deposit(amount) match {
+    account.deposit(clock, amount) match {
       case Right(updatedAccount) =>
         accountRepository.save(updatedAccount)
         Right(updatedAccount)

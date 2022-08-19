@@ -2,6 +2,17 @@ package banking.domain
 
 import java.util.UUID
 
-case class Account(id: UUID) {
-  def deposit(amount: Double): Either[String, Account] = Right(this)
+case class Account(id: UUID, transactions: List[Transaction] = List()) {
+
+  def deposit(clock: Clock, amount: Double): Either[String, Account] = {
+    if (amount <= 0) Left("Invalid amount for deposit")
+    else
+      Right(
+        copy(transactions =
+          List(
+            Transaction(clock.now(), amount)
+          )
+        )
+      )
+  }
 }

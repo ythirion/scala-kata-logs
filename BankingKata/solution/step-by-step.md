@@ -114,8 +114,8 @@ Go down to the Unit Level and work on a first `Use Case`
 ### Deposit
 Let's think about test cases for the deposit:
 ```text
-- Not existing account -> return a failure
-- Existing account -> store the update account 
+Not existing account -> return a failure
+Existing account -> store the update account 
 ```
 
 Passing Sequence:
@@ -180,6 +180,7 @@ def invoke(deposit: Deposit): Either[String, Account] = Left("Unknown account")
 
 :large_blue_circle: Do you think any refactoring could be done ?
 
+#### Passing test
 :red_circle: Let's write a passing test
 - We need to instantiate an existing `Account`
 - Simulate it can be found from the `db`
@@ -235,6 +236,12 @@ case class Account(id: UUID) {
 }
 ```
 
+Where are we?
+```text
+✅ Not existing account -> return a failure
+✅ Existing account -> store the update account 
+```
+
 :large_blue_circle: We have some potential improvement in the tests
 
 ```scala
@@ -261,6 +268,7 @@ class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with 
     val deposit = Deposit(account.id, 1000)
     val depositUseCase = new DepositUseCase(accountRepositoryStub)
 
+    // Use functions to put an explicit on this setup
     (accountRepositoryStub.find _)
       .when(account.id)
       .returns(Some(account))
@@ -275,7 +283,7 @@ class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with 
 }
 ```
 
-Removed duplication
+Removed duplication and better setup
 ```scala
 class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
   private val accountRepositoryStub = stub[AccountRepository]
@@ -283,19 +291,13 @@ class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with 
   private val depositUseCase: DepositUseCase = new DepositUseCase(accountRepositoryStub)
 
   it should "return a failure for a non existing account" in {
-    (accountRepositoryStub.find _)
-      .when(deposit.accountId)
-      .returns(None)
-
+    setupAccountNotFoundInRepository()
     depositUseCase.invoke(deposit).left.get mustBe "Unknown account"
   }
 
   it should "store the account for an existing account" in {
-    val account: Account = Account(deposit.accountId)
-
-    (accountRepositoryStub.find _)
-      .when(account.id)
-      .returns(Some(account))
+    val account: Account = aNewAccount(deposit.accountId).build()
+    setupAccountExistingInRepository(account)
 
     val newAccount = depositUseCase.invoke(deposit)
 
@@ -304,6 +306,16 @@ class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with 
       .verify(newAccount.right.value)
       .once()
   }
+
+  private def setupAccountExistingInRepository(account: Account): Unit =
+    (accountRepositoryStub.find _)
+      .when(deposit.accountId)
+      .returns(Some(account))
+
+  private def setupAccountNotFoundInRepository(): Unit =
+    (accountRepositoryStub.find _)
+      .when(deposit.accountId)
+      .returns(None)
 }
 ```
 
@@ -321,3 +333,87 @@ object AccountBuilder {
 // its usage
 val account: Account = aNewAccount(deposit.accountId).build()
 ```
+
+#### Implement deposit on Account
+Add a new test class `AccountShould` and identify our test list
+```text
+Return "Invalid amount" for 0
+Given an empty account when I deposit 1000 then account should contain banking.domain.Transaction(currentDateTime, 1000)
+Given an account containing already a banking.domain.Transaction(-200) when I deposit 1000 then account should contain banking.domain.Transaction(currentDateTime, 1000) 
+```
+
+:red_circle: Let's start with a failing test
+
+```scala
+  it should "return an error for a deposit of 0" in {
+    val account = aNewAccount().build()
+    account.deposit(0).left.get mustBe "Invalid amount for deposit"
+  }
+```
+
+:green_circle: Implement the business rule -> return an error in case of invalid amount
+
+```scala
+  def deposit(amount: Double): Either[String, Account] = {
+    if (amount <= 0) Left("Invalid amount for deposit")
+    else Right(this)
+  }
+```
+
+:large_blue_circle: rename the account in the test -> emptyAccount
+
+```scala
+  it should "return an error for a deposit of 0" in {
+    val emptyAccount = aNewAccount().build()
+    emptyAccount.deposit(0).left.get mustBe "Invalid amount for deposit"
+  }
+```
+
+:red_circle: Let's write a passing test
+
+```scala
+  it should "contain banking.domain.Transaction(currentDateTime, 1000) for an empty account and a deposit of 1000" in {
+    val transactionTime = LocalDateTime.of(2022, 8, 19, 13, 0)
+
+    (clockStub.now _)
+      .when()
+      .returns(transactionTime)
+
+    emptyAccount
+      .deposit(clockStub, 1000)
+      .right
+      .value
+      .transactions must contain(Transaction(transactionTime, 1000))
+  }
+```
+
+From here we identified that we need to add 2 stuff:
+- create a new ValueObject `Transaction`
+- pass a `Clock` for the `Account` to be able to instantiate a `banking.domain.Transaction` with a date and a time
+
+```scala
+case class Transaction(at: LocalDateTime, amount: Double) {}
+
+case class Account(id: UUID, transactions: List[Transaction] = List()) {
+
+  def deposit(clock: Clock, amount: Double): Either[String, Account] = {
+    if (amount <= 0) Left("Invalid amount for deposit")
+    else
+      Right(
+        copy(transactions =
+          List(
+            Transaction(clock.now(), amount)
+          )
+        )
+      )
+  }
+}
+
+trait Clock {
+  def now(): LocalDateTime
+}
+```
+
+By changing the contract of `deposit` method we had an impact on the tests and production code.
+Let's fix it and use your compiler as a driver.
+
