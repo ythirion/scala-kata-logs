@@ -11,16 +11,18 @@ class PrintStatementFeature extends AnyFlatSpec {
 ```
 
 - Create the necessary objects from this acceptance test
+- We choose to design 1 `Use Case` for each business behavior
+  - Instead of having `all-in-one` services
 
 ```scala
   it should "print statement containing all the transactions" in {
     val accountId = UUID.randomUUID()
-        
-    accountService.deposit(accountId, 1000d)
-    accountService.deposit(accountId, 2000d)
-    accountService.withdraw(accountId, 500d)
 
-    accountService.printStatement(customer, printerStub)
+    depositUseCase.invoke(Deposit(accountId, 1000d))
+    depositUseCase.invoke(Deposit(accountId, 2000d))
+    withDrawUseCase.invoke(Withdraw(accountId, 500d))
+
+    printStatementUseCase.invoke(PrintStatement(accountId))
 
     printerStub.verify("date       |   credit |    debit |  balance").once()
     printerStub.verify("19-01-2022 |          |   500.00 |  2500.00").once()
@@ -29,21 +31,32 @@ class PrintStatementFeature extends AnyFlatSpec {
   }
 ```
 
-- Create an `AccountService` in the `banking.services` package
+- From here, we can generate the necessary objects to compile this code
+
+![Generate Code from Acceptance Test](img/generate-code.png)
+
+- Generate the related commands inside a `banking.commands` package
+```scala
+case class Deposit(accountId: UUID, amount: Double) {}
+case class PrintStatement(accountId: UUID) {}
+case class Withdraw(accountId: UUID, amount: Double) {}
+```
+
+- Generate the Use Cases inside a `banking.usecases` package
 
 ```scala
-class AccountService() {
-  def deposit(accountId: UUID, amount: Double): Either[String, Account] = ???
-  def withdraw(accountId: UUID, amount: Double): Either[String, Account] = ???
-  def printStatement(accountId: UUID, printer: String => Unit): Unit = ???
+class DepositUseCase() {
+  def invoke(deposit: Deposit) = ???
 }
-```
 
-- Create an `Account` case class in the `banking.domain` package
+class PrintStatementUseCase(printer: String => Unit) {
+  def invoke(statement: PrintStatement) = ???
+}
 
-```scala
-case class Account() {}
-```
+class WithdrawUseCase() {
+  def invoke(withdraw: Withdraw) = ???
+}
+``` 
 
 - Instantiate a `stub` function for our test
 
@@ -51,17 +64,20 @@ case class Account() {}
 class PrintStatementFeature extends AnyFlatSpec with Matchers with MockFactory {
   behavior of "Account API"
 
-  private val accountService = new AccountService()
   private val printerStub = stubFunction[String, Unit]
+
+  private val depositUseCase = new DepositUseCase()
+  private val withDrawUseCase = new WithdrawUseCase()
+  private val printStatementUseCase = new PrintStatementUseCase(printerStub)
 
   it should "print statement containing all the transactions" in {
     val accountId = UUID.randomUUID()
-    
-    accountService.deposit(accountId, 1000d)
-    accountService.deposit(accountId, 2000d)
-    accountService.withdraw(accountId, 500d)
 
-    accountService.printStatement(accountId, printerStub)
+    depositUseCase.invoke(Deposit(accountId, 1000d))
+    depositUseCase.invoke(commands.Deposit(accountId, 2000d))
+    withDrawUseCase.invoke(Withdraw(accountId, 500d))
+
+    printStatementUseCase.invoke(PrintStatement(accountId))
 
     printerStub.verify("date       |   credit |    debit |  balance").once()
     printerStub.verify("19-01-2022 |          |   500.00 |  2500.00").once()
@@ -88,4 +104,19 @@ Congrats, you have a failing acceptance test that we will use as an `implementat
 
 ## TDD Loops
 Go down to the Unit Level and work on the `AccountService`
+
+> What is the responsibility of this class?
+
+- Fetch a database to identify if the `account` exists in the system
+  - If so, delegate the business logic to the `domain` entity then `store` the new state
+  - If no, return a failure
+
+Here, 3 business behaviors are clearly identified on the `Service`. Let's work on them.
+
+### Deposit
+Let's think about test cases for the deposit:
+```text
+- Not existing account -> return a failure
+- Existing account -> store the update account 
+```
 

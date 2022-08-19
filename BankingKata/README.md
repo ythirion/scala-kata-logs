@@ -5,24 +5,17 @@ Think of your personal bank account experience
 When in doubt, go for the simplest solution
 
 ## Problem Description
-Create a simple bank application with the following features :
+Create a simple bank system with the following features :
 - Deposit into Account
 - Withdraw from an account
 - Print a bank statement to the console
 
 ### Starting points and Constraints
-1. Start with a class following this structure:
-````scala
-class AccountService {
-  def deposit(customerId: UUID, amount: Double): Either[String, Account]
-  def withdraw(customerId: UUID, amount: Double): Either[String, Account] 
-  def printStatement(customerId: UUID, printer: String => Unit): Unit
-}
-````
-> Account must stay immutable
-
-2. You are not allowed to add any other `public` method
-3. Use `String` and `Double` for dates and amounts (keep it simple)
+1. Your system should be able to support the operations specified in the below scenario
+2. Use `String` for errors, `UUID` for account ids, `Double` for amounts (keep it simple)
+3. Use `Use Case` as first class citizens
+    - They take a `Command` as input and return a `Result`
+    - They contain only 1 public method `invoke`
 
 ### Scenario
 Here is an acceptance scenario as described by one of our Domain Expert
@@ -46,3 +39,6 @@ Scenario: Printing statement after transactions
 ![TDD Outside-In](img/outside-in.png)
 
 ![TDD double loop](img/tdd-double-loop.png)
+
+## Clean Architecture
+[![Clean architecture schema from cleancoder](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
