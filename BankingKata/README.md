@@ -14,9 +14,9 @@ Create a simple bank application with the following features :
 1. Start with a class following this structure:
 ````scala
 class AccountService {
-  def deposit(amount: Double): Either[String, Account]
-  def withdraw(amount: Double): Either[String, Account] 
-  def printStatement(printer: String => Unit): Unit
+  def deposit(customerId: UUID, amount: Double): Either[String, Account]
+  def withdraw(customerId: UUID, amount: Double): Either[String, Account] 
+  def printStatement(customerId: UUID, printer: String => Unit): Unit
 }
 ````
 > Account must stay immutable

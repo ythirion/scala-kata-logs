@@ -5,6 +5,8 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers
 
+import java.util.UUID
+
 class PrintStatementFeature extends AnyFlatSpec with Matchers with MockFactory {
   behavior of "Account API"
 
@@ -12,11 +14,13 @@ class PrintStatementFeature extends AnyFlatSpec with Matchers with MockFactory {
   private val printerStub = stubFunction[String, Unit]
 
   it should "print statement containing all the transactions" in {
-    accountService.deposit(1000d)
-    accountService.deposit(2000d)
-    accountService.withdraw(500d)
+    val customer = UUID.randomUUID()
 
-    accountService.printStatement(printerStub)
+    accountService.deposit(customer, 1000d)
+    accountService.deposit(customer, 2000d)
+    accountService.withdraw(customer, 500d)
+
+    accountService.printStatement(customer, printerStub)
 
     inSequence {
       printerStub.verify("date       |   credit |    debit |  balance").once()
