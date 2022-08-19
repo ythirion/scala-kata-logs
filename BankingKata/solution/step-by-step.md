@@ -86,7 +86,7 @@ class PrintStatementFeature extends AnyFlatSpec with Matchers with MockFactory {
 }
 ```
 
-- Let's improve our test ta take into account the order in which the printer should be called
+- Let's improve our test to take into account the order in which the printer should be called
     - We can use the `inSequence` method from `scalamock` for that
 ```scala
 inSequence {
