@@ -18,9 +18,11 @@ class PrintStatementFeature extends AnyFlatSpec with Matchers with MockFactory {
 
     accountService.printStatement(printerStub)
 
-    printerStub.verify("date       |   credit |    debit |  balance").once()
-    printerStub.verify("19-01-2022 |          |   500.00 |  2500.00").once()
-    printerStub.verify("18-01-2022 |  2000.00 |          |  3000.00").once()
-    printerStub.verify("12-01-2022 |  1000.00 |          |  1000.00").once()
+    inSequence {
+      printerStub.verify("date       |   credit |    debit |  balance").once()
+      printerStub.verify("19-01-2022 |          |   500.00 |  2500.00").once()
+      printerStub.verify("18-01-2022 |  2000.00 |          |  3000.00").once()
+      printerStub.verify("12-01-2022 |  1000.00 |          |  1000.00").once()
+    }
   }
 }
