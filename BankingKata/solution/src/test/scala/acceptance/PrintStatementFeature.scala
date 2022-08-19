@@ -14,13 +14,13 @@ class PrintStatementFeature extends AnyFlatSpec with Matchers with MockFactory {
   private val printerStub = stubFunction[String, Unit]
 
   it should "print statement containing all the transactions" in {
-    val customer = UUID.randomUUID()
+    val accountId = UUID.randomUUID()
 
-    accountService.deposit(customer, 1000d)
-    accountService.deposit(customer, 2000d)
-    accountService.withdraw(customer, 500d)
+    accountService.deposit(accountId, 1000d)
+    accountService.deposit(accountId, 2000d)
+    accountService.withdraw(accountId, 500d)
 
-    accountService.printStatement(customer, printerStub)
+    accountService.printStatement(accountId, printerStub)
 
     inSequence {
       printerStub.verify("date       |   credit |    debit |  balance").once()

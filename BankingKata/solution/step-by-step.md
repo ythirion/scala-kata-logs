@@ -14,11 +14,11 @@ class PrintStatementFeature extends AnyFlatSpec {
 
 ```scala
   it should "print statement containing all the transactions" in {
-    val customer = UUID.randomUUID()
-    
-    accountService.deposit(customer, 1000d)
-    accountService.deposit(customer, 2000d)
-    accountService.withdraw(customer, 500d)
+    val accountId = UUID.randomUUID()
+        
+    accountService.deposit(accountId, 1000d)
+    accountService.deposit(accountId, 2000d)
+    accountService.withdraw(accountId, 500d)
 
     accountService.printStatement(customer, printerStub)
 
@@ -33,9 +33,9 @@ class PrintStatementFeature extends AnyFlatSpec {
 
 ```scala
 class AccountService() {
-  def deposit(customerId: UUID, amount: Double): Either[String, Account] = ???
-  def withdraw(customerId: UUID, amount: Double): Either[String, Account] = ???
-  def printStatement(customerId: UUID, printer: String => Unit): Unit = ???
+  def deposit(accountId: UUID, amount: Double): Either[String, Account] = ???
+  def withdraw(accountId: UUID, amount: Double): Either[String, Account] = ???
+  def printStatement(accountId: UUID, printer: String => Unit): Unit = ???
 }
 ```
 
@@ -55,13 +55,13 @@ class PrintStatementFeature extends AnyFlatSpec with Matchers with MockFactory {
   private val printerStub = stubFunction[String, Unit]
 
   it should "print statement containing all the transactions" in {
-    val customer = UUID.randomUUID()
+    val accountId = UUID.randomUUID()
     
-    accountService.deposit(customer, 1000d)
-    accountService.deposit(customer, 2000d)
-    accountService.withdraw(customer, 500d)
+    accountService.deposit(accountId, 1000d)
+    accountService.deposit(accountId, 2000d)
+    accountService.withdraw(accountId, 500d)
 
-    accountService.printStatement(customer, printerStub)
+    accountService.printStatement(accountId, printerStub)
 
     printerStub.verify("date       |   credit |    debit |  balance").once()
     printerStub.verify("19-01-2022 |          |   500.00 |  2500.00").once()
@@ -88,3 +88,4 @@ Congrats, you have a failing acceptance test that we will use as an `implementat
 
 ## TDD Loops
 Go down to the Unit Level and work on the `AccountService`
+

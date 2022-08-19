@@ -28,7 +28,7 @@ class AccountService {
 Here is an acceptance scenario as described by one of our Domain Expert
 
 ```gherkin
-Scenario: Printing statement after deposits and withdrawal
+Scenario: Printing statement after transactions
   Given a client makes a deposit of 1000 on 12-08-2022
   And a deposit of 2000 on 18-08-2012
   And a withdrawal of 500 on 19-01-2012
