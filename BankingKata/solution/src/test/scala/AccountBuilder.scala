@@ -1,9 +1,10 @@
+import banking.domain
 import banking.domain.Account
 
 import java.util.UUID
 
 class AccountBuilder(private val accountId: UUID) {
-  def build(): Account = Account(accountId)
+  def build(): Account = domain.Account(accountId)
 }
 
 object AccountBuilder {

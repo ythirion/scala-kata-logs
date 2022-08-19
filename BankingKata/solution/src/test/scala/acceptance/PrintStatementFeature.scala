@@ -2,6 +2,7 @@ package acceptance
 
 import banking.commands
 import banking.commands.{Deposit, PrintStatement, Withdraw}
+import banking.domain.AccountRepository
 import banking.usecases.{DepositUseCase, PrintStatementUseCase, WithdrawUseCase}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
@@ -10,11 +11,12 @@ import org.scalatest.matchers.must.Matchers
 import java.util.UUID
 
 class PrintStatementFeature extends AnyFlatSpec with Matchers with MockFactory {
-  behavior of "Account API"
+  behavior of "banking.domain.Account API"
 
   private val printerStub = stubFunction[String, Unit]
+  private val accountRepositoryStub = stub[AccountRepository]
 
-  private val depositUseCase = new DepositUseCase()
+  private val depositUseCase = new DepositUseCase(accountRepositoryStub)
   private val withDrawUseCase = new WithdrawUseCase()
   private val printStatementUseCase = new PrintStatementUseCase(printerStub)
 

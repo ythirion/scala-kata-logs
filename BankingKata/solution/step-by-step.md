@@ -4,7 +4,7 @@
 
 ```scala
 class PrintStatementFeature extends AnyFlatSpec {
-  behavior of "Account API"
+  behavior of "banking.domain.Account API"
 
   it should "print statement containing all the transactions" in {}
 }
@@ -62,7 +62,7 @@ class WithdrawUseCase() {
 
 ```scala
 class PrintStatementFeature extends AnyFlatSpec with Matchers with MockFactory {
-  behavior of "Account API"
+  behavior of "banking.domain.Account API"
 
   private val printerStub = stubFunction[String, Unit]
 
@@ -103,7 +103,7 @@ Congrats, you have a failing acceptance test that we will use as an `implementat
 ![Failing Acceptance Test](img/failing-acceptance-test.png)
 
 ## TDD Loops
-Go down to the Unit Level and work on the `AccountService`
+Go down to the Unit Level and work on a first `Use Case`
 
 > What is the responsibility of this class?
 
@@ -111,12 +111,127 @@ Go down to the Unit Level and work on the `AccountService`
   - If so, delegate the business logic to the `domain` entity then `store` the new state
   - If no, return a failure
 
-Here, 3 business behaviors are clearly identified on the `Service`. Let's work on them.
-
 ### Deposit
 Let's think about test cases for the deposit:
 ```text
 - Not existing account -> return a failure
 - Existing account -> store the update account 
+```
+
+Passing Sequence:
+![Deposit passing Use Case](img/deposit-passing-use-case.png)
+
+Let's create a folder `Deposit` in our tests and create a new test class `DepositShould`
+
+#### Non-passing test
+Based on our sequence diagram, we can design the test by knowing what we will need to make it pass.
+One question is remaining which return type do we want to use on `invoke`?
+
+> Let's use an Either[String, Account]
+
+:red_circle: Let's write the test:
+```scala
+class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
+
+    it should "return a failure for a non existing account" in {
+      val deposit = Deposit(UUID.randomUUID(), 1000)
+      val depositUseCase = new DepositUseCase(accountRepositoryStub)
+  
+      (accountRepositoryStub.find _)
+        .when(deposit.accountId)
+        .returns(None)
+  
+      depositUseCase.invoke(deposit).left.get mustBe "Unknown account"
+    }
+}
+```
+
+Start by generating an `Account` class in a package `banking.domain`
+
+```scala
+case class Account(id: UUID) {}
+```
+
+Then, instantiate a stub for the repository and create a trait for it.
+
+```scala
+private val accountRepositoryStub = stub[AccountRepository]
+
+// under the domain -> check hexagonal architecture (ports and adapters)
+trait AccountRepository {
+  def find(accountId: UUID): Option[Account]
+}
+```
+
+Adapt the `Use Case`:
+- Inject the repository
+- Change the `invoke` return type -> `Either[String, Account]`
+
+```scala
+class DepositUseCase(accountRepository: AccountRepository) {
+  def invoke(deposit: Deposit): Either[String, Account] = ???
+}
+```
+
+:green_circle: Make it green as fast as possible
+```scala
+def invoke(deposit: Deposit): Either[String, Account] = Left("Unknown account")
+```
+
+:large_blue_circle: Do you think any refactoring could be done ?
+
+:red_circle: Let's write a passing test
+- We need to instantiate an existing `Account`
+- Simulate it can be found from the `db`
+- Verify that the updatedAccount is saved through our `AccountRepository`
+- `Should we use a test double for Account? -> check the behavior is called from here`
+
+```scala
+  it should "store the account for an existing account" in {
+      val account: Account = Account(UUID.randomUUID())
+      val deposit = Deposit(account.id, 1000)
+      val depositUseCase = new DepositUseCase(accountRepositoryStub)
+  
+      (accountRepositoryStub.find _)
+        .when(account.id)
+        .returns(Some(account))
+  
+      val newAccount = depositUseCase.invoke(deposit)
+  
+      newAccount.isRight mustBe true
+      (accountRepositoryStub.save _)
+        .verify(newAccount.right.value)
+        .once()
+    }
+```
+
+:green_circle: Let's iterate on the `UseCase` to make it green
+```scala
+class DepositUseCase(accountRepository: AccountRepository) {
+  def invoke(deposit: Deposit): Either[String, Account] = {
+    accountRepository.find(deposit.accountId) match {
+      case Some(account) => makeDeposit(account, deposit.amount)
+      case None          => Left("Unknown account")
+    }
+  }
+
+  private def makeDeposit(account: Account, amount: Double): Either[String, Account] = {
+    account.deposit(amount) match {
+      case Right(updatedAccount) =>
+        accountRepository.save(updatedAccount)
+        Right(updatedAccount)
+      case Left(error) => Left(error)
+    }
+  }
+}
+```
+
+We need to generate a `deposit` method from it as well.
+We `fake its result` -> we will implement this class after it.
+
+```scala
+case class Account(id: UUID) {
+  def deposit(amount: Double): Either[String, Account] = Right(this)
+}
 ```
 
