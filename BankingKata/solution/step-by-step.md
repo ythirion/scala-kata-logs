@@ -10,7 +10,7 @@ class PrintStatementFeature extends AnyFlatSpec {
 }
 ```
 
-:red_circle: let's create our acceptance test
+:red_circle: let's create our acceptance test based on the business scenario
 
 ```scala
   it should "print statement containing all the transactions" in {
