@@ -1,11 +1,12 @@
 package org.craftedsw.tripservicekata.user
 
-import scala.collection.mutable
 import org.craftedsw.tripservicekata.trip.Trip
+
+import scala.collection.mutable
 
 class User {
 
-	val tripList: mutable.MutableList[Trip] = mutable.MutableList()
+  val tripList: mutable.MutableList[Trip] = mutable.MutableList()
 	val friendList: mutable.MutableList[User] = mutable.MutableList()
 
 	def friends(): List[User] = {
@@ -24,4 +25,6 @@ class User {
 		tripList += trip
 	}
 
+  def isFriendWith(user: User): Boolean =
+		friendList.contains(user)
 }

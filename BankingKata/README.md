@@ -1,7 +1,6 @@
-# Bank account kata
+# Bank account - Outside-In kata
 
 ## Objectives
-
 Think of your personal bank account experience
 When in doubt, go for the simplest solution
 
@@ -11,35 +10,39 @@ Create a simple bank application with the following features :
 - Withdraw from an account
 - Print a bank statement to the console
 
-## Starting points and Constraints
+### Starting points and Constraints
 1. Start with a class following this structure:
 ````scala
-class Account {
-  def deposit(amount: Int): Either[String, Account]
-  def withdraw(amount: Int): Either[String, Account] 
+class AccountService {
+  def deposit(amount: Double): Either[String, Account]
+  def withdraw(amount: Double): Either[String, Account] 
   def printStatement(printer: String => Unit): Unit
 }
 ````
-- Account must stay immutable
+> Account must stay immutable
 
-2. You are not allowed to add any other `public` function
-3. Use `String` and `Int` for dates and amounts (keep it simple)
+2. You are not allowed to add any other `public` method
+3. Use `String` and `Double` for dates and amounts (keep it simple)
 
-## BDD
-
-Starting from an acceptance test: (you can use cucumber to implement it)
+### Scenario
+Here is an acceptance scenario as described by one of our Domain Expert
 
 ```gherkin
 Scenario: Printing statement after deposits and withdrawal
-  Given a client makes a deposit of 1000 on 10-01-2012
-  And a deposit of 2000 on 13-01-2012
-  And a withdrawal of 500 on 14-01-2012
-  When she prints her bank statement
-  Then she would see
+  Given a client makes a deposit of 1000 on 12-08-2022
+  And a deposit of 2000 on 18-08-2012
+  And a withdrawal of 500 on 19-01-2012
+  When he/she prints her bank statement
+  Then he/she would see
   """
-  date       ||   credit ||    debit ||  balance
-  14-01-2012 ||          ||   500.00 ||  2500.00
-  13-01-2012 ||  2000.00 ||          ||  3000.00
-  10-01-2012 ||  1000.00 ||          ||  1000.00
+  date       |   credit |    debit |  balance
+  19-01-2022 |          |   500.00 |  2500.00
+  18-01-2022 |  2000.00 |          |  3000.00
+  12-01-2022 |  1000.00 |          |  1000.00
   """
 ```
+
+## Outside-In TDD
+![TDD Outside-In](img/outside-in.png)
+
+![TDD double loop](img/tdd-double-loop.png)
