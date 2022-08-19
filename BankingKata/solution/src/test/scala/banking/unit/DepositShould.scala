@@ -1,4 +1,6 @@
-import AccountBuilder.aNewAccount
+package banking.unit
+
+import banking.AccountBuilder.aNewAccount
 import banking.commands.Deposit
 import banking.domain.{Account, AccountRepository, Clock}
 import banking.usecases.DepositUseCase

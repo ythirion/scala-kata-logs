@@ -1,4 +1,4 @@
-package acceptance
+package banking.acceptance
 
 import banking.commands
 import banking.commands.{Deposit, PrintStatement, Withdraw}

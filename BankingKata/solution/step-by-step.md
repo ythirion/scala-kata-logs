@@ -4,7 +4,7 @@
 
 ```scala
 class PrintStatementFeature extends AnyFlatSpec {
-  behavior of "banking.domain.Account API"
+  behavior of "Account API"
 
   it should "print statement containing all the transactions" in {}
 }
@@ -62,7 +62,7 @@ class WithdrawUseCase() {
 
 ```scala
 class PrintStatementFeature extends AnyFlatSpec with Matchers with MockFactory {
-  behavior of "banking.domain.Account API"
+  behavior of "Account API"
 
   private val printerStub = stubFunction[String, Unit]
 
@@ -121,7 +121,7 @@ Existing account -> store the update account
 Passing Sequence:
 ![Deposit passing Use Case](img/deposit-passing-use-case.png)
 
-Let's create a new test class `DepositShould`
+Let's create a new test class `unit.DepositShould`
 
 #### Non-passing test
 Based on our sequence diagram, we can design the test by knowing what we will need to make it pass.
@@ -131,7 +131,7 @@ One question is remaining which return type do we want to use on `invoke`?
 
 :red_circle: Let's write the test:
 ```scala
-class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
+class unit.DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
 
     it should "return a failure for a non existing account" in {
       val deposit = Deposit(UUID.randomUUID(), 1000)
@@ -245,7 +245,7 @@ Where are we?
 :large_blue_circle: We have some potential improvement in the tests
 
 ```scala
-class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
+class unit.DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
   private val accountRepositoryStub = stub[AccountRepository]
   // Declare the same command for both tests
   // Instantiate the UseCase here
@@ -285,7 +285,7 @@ class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with 
 
 Removed duplication and better setup
 ```scala
-class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
+class unit.DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
   private val accountRepositoryStub = stub[AccountRepository]
   private val deposit = Deposit(UUID.randomUUID(), 1000)
   private val depositUseCase: DepositUseCase = new DepositUseCase(accountRepositoryStub)
@@ -335,11 +335,11 @@ val account: Account = aNewAccount(deposit.accountId).build()
 ```
 
 #### Implement deposit on Account
-Add a new test class `AccountShould` and identify our test list
+Add a new test class `unit.AccountShould` and identify our test list
 ```text
 Return "Invalid amount" for 0
-Given an empty account when I deposit 1000 then account should contain banking.domain.Transaction(currentDateTime, 1000)
-Given an account containing already a banking.domain.Transaction(-200) when I deposit 1000 then account should contain banking.domain.Transaction(currentDateTime, 1000) 
+Given an empty account when I deposit 1000 then account should contain Transaction(currentDateTime, 1000)
+Given an account containing already a Transaction(-200) when I deposit 1000 then account should contain Transaction(currentDateTime, 1000) 
 ```
 
 :red_circle: Let's start with a failing test
@@ -360,6 +360,12 @@ Given an account containing already a banking.domain.Transaction(-200) when I de
   }
 ```
 
+```text
+✅ Return "Invalid amount" for 0
+Given an empty account when I deposit 1000 then account should contain Transaction(currentDateTime, 1000)
+Given an account containing already a Transaction(-200) when I deposit 1000 then account should contain Transaction(currentDateTime, 1000) 
+```
+
 :large_blue_circle: rename the account in the test -> emptyAccount
 
 ```scala
@@ -372,7 +378,7 @@ Given an account containing already a banking.domain.Transaction(-200) when I de
 :red_circle: Let's write a passing test
 
 ```scala
-  it should "contain banking.domain.Transaction(currentDateTime, 1000) for an empty account and a deposit of 1000" in {
+  it should "contain Transaction(currentDateTime, 1000) for an empty account and a deposit of 1000" in {
     val transactionTime = LocalDateTime.of(2022, 8, 19, 13, 0)
 
     (clockStub.now _)
@@ -388,8 +394,8 @@ Given an account containing already a banking.domain.Transaction(-200) when I de
 ```
 
 From here we identified that we need to add 2 stuff:
-- create a new ValueObject `Transaction`
-- pass a `Clock` for the `Account` to be able to instantiate a `banking.domain.Transaction` with a date and a time
+- create a new Value Object `Transaction`
+- pass a `Clock` for the `Account` to be able to instantiate a `Transaction` with a date and a time
 
 ```scala
 case class Transaction(at: LocalDateTime, amount: Double) {}
@@ -417,3 +423,158 @@ trait Clock {
 By changing the contract of `deposit` method we had an impact on the tests and production code.
 Let's fix it and use your compiler as a driver.
 
+```text
+✅ Return "Invalid amount" for 0
+✅ Given an empty account when I deposit 1000 then account should contain Transaction(currentDateTime, 1000)
+Given an account containing already a Transaction(-200) when I deposit 1000 then account should contain Transaction(currentDateTime, 1000) 
+```
+
+:large_blue_circle: what can be improved?
+
+:red_circle: Let's improve our confidence by adding a passing test for an `Account` containing existing transactions
+
+```scala
+  it should "contain Transaction(transactionTime, 1000) for an account containing already a Transaction(09/10/1987, -200) and a deposit of 1000" in {
+    val transactionTime = LocalDateTime.of(2022, 8, 19, 13, 0)
+    val formerTransaction = Transaction(LocalDateTime.of(1987, 10, 9, 23, 0), -200)
+
+    val account = aNewAccount()
+      .ContainingTransactions(formerTransaction)
+      .build()
+
+    (clockStub.now _)
+      .when()
+      .returns(transactionTime)
+
+    account
+      .deposit(clockStub, 1000)
+      .right
+      .value
+      .transactions mustBe List(Transaction(transactionTime, 1000), formerTransaction)
+  }
+```
+
+:green_circle: Here we need to adapt the test of the `AccountBuilder`
+
+```scala
+class AccountBuilder(private val accountId: UUID) {
+  private var transactions: List[Transaction] = Nil
+
+  def ContainingTransactions(transactions: Transaction*): AccountBuilder = {
+    this.transactions = transactions.toList
+    this
+  }
+
+  def build(): Account = Account(accountId, transactions)
+}
+```
+
+Then refactor the `deposit` code to handle this new test case
+
+```scala
+  def deposit(clock: Clock, amount: Double): Either[String, Account] = {
+    if (amount <= 0) Left("Invalid amount for deposit")
+    else
+      Right(
+        copy(transactions = Transaction(clock.now(), amount) :: transactions)
+      )
+  }
+```
+
+:large_blue_circle: Let's simplify the readability of our tests
+- Centralize initialization of the stub
+  - We need to use `OneInstancePerTest` trait to do so: more about it [here](https://scalamock.org/user-guide/sharing-scalatest/)
+- Simplify the usage of `Transaction` and dates by creating a `TransactionBuilder`
+  - And adapt the `AccountBuilder` accordingly
+
+```scala
+class AccountShould
+    extends AnyFlatSpec
+    with EitherValues
+    with Matchers
+    with MockFactory
+    with OneInstancePerTest
+    with BeforeAndAfterEach {
+
+  private val transactionTime: LocalDateTime = aLocalDateTime
+
+  private val clockStub: Clock = stub[Clock]
+  (clockStub.now _).when().returns(transactionTime)
+
+  private val emptyAccount = aNewAccount().build()
+
+  it should "return an error for a deposit of 0" in {
+    emptyAccount
+      .deposit(clockStub, 0)
+      .left
+      .get mustBe "Invalid amount for deposit"
+  }
+
+  it should "contain Transaction(transactionTime, 1000) for an empty account and a deposit of 1000" in {
+    emptyAccount
+      .deposit(clockStub, 1000)
+      .right
+      .value
+      .transactions must contain(Transaction(transactionTime, 1000))
+  }
+
+  it should "contain Transaction(transactionTime, 1000) for an account containing already a Transaction(09/10/1987, -200) and a deposit of 1000" in {
+    val account = aNewAccount()
+      .containing(
+        aNewTransaction()
+          .of(-200)
+      )
+      .build()
+
+    account
+      .deposit(clockStub, 1000)
+      .right
+      .value
+      .transactions mustBe List(Transaction(transactionTime, 1000), account.transactions.head)
+  }
+}
+```
+
+The 2 Builders:
+
+```scala
+class AccountBuilder(private val accountId: UUID) {
+  private var transactions: List[Transaction] = Nil
+
+  def containing(transactions: TransactionBuilder*): AccountBuilder = {
+    this.transactions = transactions
+      .map(_.build())
+      .toList
+
+    this
+  }
+
+  def build(): Account = Account(accountId, transactions)
+}
+
+object AccountBuilder {
+  def aNewAccount(accountId: UUID = UUID.randomUUID()): AccountBuilder =
+    new AccountBuilder(accountId)
+}
+
+class TransactionBuilder {
+  private var at = anotherDateTime
+  private var amount = 1000d
+
+  def madeAt(at: LocalDateTime): TransactionBuilder = {
+    this.at = at
+    this
+  }
+
+  def of(amount: Double): TransactionBuilder = {
+    this.amount = amount
+    this
+  }
+
+  def build(): Transaction = Transaction(at, amount)
+}
+
+object TransactionBuilder {
+  def aNewTransaction(): TransactionBuilder = new TransactionBuilder()
+}
+```
