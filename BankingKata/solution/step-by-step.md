@@ -10,9 +10,7 @@ class PrintStatementFeature extends AnyFlatSpec {
 }
 ```
 
-- Create the necessary objects from this acceptance test
-- We choose to design 1 `Use Case` for each business behavior
-  - Instead of having `all-in-one` services
+:red_circle: let's create our acceptance test
 
 ```scala
   it should "print statement containing all the transactions" in {
@@ -30,8 +28,9 @@ class PrintStatementFeature extends AnyFlatSpec {
     printerStub.verify("12-01-2022 |  1000.00 |          |  1000.00").once()
   }
 ```
-
 - From here, we can generate the necessary objects to compile this code
+- We choose to design 1 `Use Case` for each business behavior
+  - Instead of having `all-in-one` services
 
 ![Generate Code from Acceptance Test](img/generate-code.png)
 
