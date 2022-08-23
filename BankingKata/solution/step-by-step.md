@@ -163,5 +163,6 @@ In general, we recommend `unit testing Use Cases and Gateways` (**Approach 2**) 
 - High coverage at low test maintenance costs, thus increasing ROI
 - High test robustness, we can refactor the system safely without breaking tests
 
-[1. Deposit](docs/1.deposit.md)
-[2. Withdraw](docs/2.withdraw.md)
+### Let's Unit Test
+- [1. Deposit](docs/1.deposit.md)
+- [2. Withdraw](docs/2.withdraw.md)

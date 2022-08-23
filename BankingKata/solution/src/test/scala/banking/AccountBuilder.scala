@@ -7,11 +7,8 @@ import java.util.UUID
 class AccountBuilder(private val accountId: UUID) {
   private var transactions: List[Transaction] = Nil
 
-  def containing(transactions: TransactionBuilder*): AccountBuilder = {
+  def containing(transactions: List[Transaction]): AccountBuilder = {
     this.transactions = transactions
-      .map(_.build())
-      .toList
-
     this
   }
 
