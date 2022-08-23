@@ -1,5 +1,6 @@
 package banking.unit
 
+import banking.AccountBuilder
 import banking.AccountBuilder.aNewAccount
 import banking.commands.Deposit
 import banking.domain.{Account, AccountRepository, Clock}
@@ -18,13 +19,12 @@ class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with 
     new DepositUseCase(accountRepositoryStub, stub[Clock])
 
   it should "return a failure for a non existing account" in {
-    setupAccountNotFoundInRepository()
+    accountNotFound()
     depositUseCase.invoke(deposit).left.get mustBe "Unknown account"
   }
 
   it should "store the account for an existing account" in {
-    val account: Account = aNewAccount(deposit.accountId).build()
-    setupAccountExistingInRepository(account)
+    existingAccount(aNewAccount(deposit.accountId))
 
     val newAccount = depositUseCase.invoke(deposit)
 
@@ -34,12 +34,14 @@ class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with 
       .once()
   }
 
-  private def setupAccountExistingInRepository(account: Account): Unit =
+  private def existingAccount(accountBuilder: AccountBuilder): Unit = {
+    val account = accountBuilder.build()
     (accountRepositoryStub.find _)
       .when(account.id)
       .returns(Some(account))
+  }
 
-  private def setupAccountNotFoundInRepository(): Unit =
+  private def accountNotFound(): Unit =
     (accountRepositoryStub.find _)
       .when(deposit.accountId)
       .returns(None)

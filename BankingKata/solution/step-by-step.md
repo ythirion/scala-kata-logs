@@ -114,7 +114,7 @@ Go down to the Unit Level and work on a first `Use Case`
 Let's think about test cases for the deposit:
 ```text
 Not existing account -> return a failure
-Existing account -> store the update account 
+Existing account -> store the updated account 
 ```
 
 Passing Sequence:
@@ -238,13 +238,13 @@ case class Account(id: UUID) {
 Where are we?
 ```text
 ✅ Not existing account -> return a failure
-✅ Existing account -> store the update account 
+✅ Existing account -> store the updated account 
 ```
 
 :large_blue_circle: We have some potential improvement in the tests
 
 ```scala
-class unit.DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
+class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
   private val accountRepositoryStub = stub[AccountRepository]
   // Declare the same command for both tests
   // Instantiate the UseCase here

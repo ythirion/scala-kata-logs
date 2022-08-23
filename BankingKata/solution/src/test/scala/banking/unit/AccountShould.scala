@@ -25,6 +25,7 @@ class AccountShould
   (clockStub.now _).when().returns(transactionTime)
 
   private val emptyAccount = aNewAccount().build()
+  private val anExistingTransaction = aNewTransaction().of(-200)
 
   it should "return an error for a deposit of 0" in {
     emptyAccount
@@ -42,11 +43,9 @@ class AccountShould
   }
 
   it should "contain Transaction(transactionTime, 1000) for an account containing already a Transaction(09/10/1987, -200) and a deposit of 1000" in {
+
     val account = aNewAccount()
-      .containing(
-        aNewTransaction()
-          .of(-200)
-      )
+      .containing(anExistingTransaction)
       .build()
 
     account
