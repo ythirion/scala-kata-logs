@@ -1,9 +1,8 @@
 package banking.unit
 
-import banking.AccountBuilder
 import banking.AccountBuilder.aNewAccount
 import banking.commands.Deposit
-import banking.domain.{Account, AccountRepository, Clock}
+import banking.domain.{AccountRepository, Clock}
 import banking.usecases.DepositUseCase
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.EitherValues
@@ -14,7 +13,9 @@ import java.util.UUID
 
 class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with Matchers {
   private val accountRepositoryStub = stub[AccountRepository]
-  private val deposit = Deposit(UUID.randomUUID(), 1000)
+  private val anAccountId = UUID.randomUUID()
+  private val deposit = Deposit(anAccountId, 1000)
+  private val invalidDeposit = Deposit(anAccountId, -1)
   private val depositUseCase: DepositUseCase =
     new DepositUseCase(accountRepositoryStub, stub[Clock])
 
@@ -23,8 +24,13 @@ class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with 
     depositUseCase.invoke(deposit).left.get mustBe "Unknown account"
   }
 
+  it should "return a failure for an existing account and negative amount" in {
+    existingAccount()
+    depositUseCase.invoke(invalidDeposit).left.get mustBe "Invalid amount for deposit"
+  }
+
   it should "store the account for an existing account" in {
-    existingAccount(aNewAccount(deposit.accountId))
+    existingAccount()
 
     val newAccount = depositUseCase.invoke(deposit)
 
@@ -34,8 +40,8 @@ class DepositShould extends AnyFlatSpec with MockFactory with EitherValues with 
       .once()
   }
 
-  private def existingAccount(accountBuilder: AccountBuilder): Unit = {
-    val account = accountBuilder.build()
+  private def existingAccount(): Unit = {
+    val account = aNewAccount(deposit.accountId).build()
     (accountRepositoryStub.find _)
       .when(account.id)
       .returns(Some(account))
