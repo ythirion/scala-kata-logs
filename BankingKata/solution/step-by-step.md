@@ -468,6 +468,12 @@ class AccountBuilder(private val accountId: UUID) {
 }
 ```
 
+```text
+✅ Return "Invalid amount" for 0
+✅ Given an empty account when I deposit 1000 then account should contain Transaction(currentDateTime, 1000)
+✅ Given an account containing already a Transaction(-200) when I deposit 1000 then account should contain Transaction(currentDateTime, 1000) 
+```
+
 Then refactor the `deposit` code to handle this new test case
 
 ```scala
