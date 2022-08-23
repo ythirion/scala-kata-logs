@@ -43,4 +43,4 @@ Scenario: Printing statement after transactions
 ## Clean Architecture
 [![Clean architecture schema from cleancoder](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
-A step-by-step solution guide is available [here](solution/step-by-step.md)
+Solution and explanations available in this [repository](https://github.com/ythirion/bank-kata)
