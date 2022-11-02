@@ -226,7 +226,9 @@ Let's do it in baby steps.
 ```
 
 #### Let's use an approval test now
-We will use the [`ApprovalTests`](https://approvaltests.com/) for it.
+We will use the [`ApprovalTests`](https://approvaltests.com/) for covering our legacy code.
+
+![Approval testing explained](img/approval-testing-cheatsheet.png)
 
 We start by adding the dependency in our `build.sbt`
 ```scala
@@ -425,9 +427,14 @@ class GildedRoseTest extends AnyFlatSpec with Matchers {
 }
 ```
 
+Congratulations, you killed all the mutants. `General Stryker` would be proud of you.
+
 ![Congratulations](img/congrats.png)
 
-Congratulations, you killed all the mutants. `General Stryker` would be proud of you.
+### Next steps?
+![Working with legacy code](img/working-with-legacy-code.png)
+
+Now that we have built our `golden master`, we are ready to refactor. 
 
 ## Conclusion
 
@@ -442,10 +449,21 @@ Congratulations, you killed all the mutants. `General Stryker` would be proud of
 Think about what we did today. 
 If you had to explain the main idea of the topic to someone else, what would you say?
 
+## Other use cases for Approval Testing
+- [Check your object-to-object mappers](https://github.com/ythirion/approval-csharp-kata/tree/solution#check-your-mapping)
+  - Validate it without any effort
+  - Not possible to forget to assert a field
+- Develop a new feature with TDD and a printed version of outcome
+  - Use approval tests as an implementation driver
+- [Integration tests](https://github.com/ythirion/approval-csharp-kata/tree/solution#integration-tests-with-verify)
+  - Easy to set expectations for a given HTTP route
+
 ## Resources 
 - [Approval Tests](https://approvaltests.com/)
+- [Understand Legacy Code - Approval Testing](https://understandlegacycode.com/approval-tests)
 - [Mutation Testing](https://xtrem-tdd.netlify.app/Flavours/mutation-testing)
 - [ScalaStyle with sbt](http://www.scalastyle.org/sbt.html)
 - [Stryker4s](https://stryker-mutator.io/docs/stryker4s/getting-started/)
+- [C# Approval kata](https://github.com/ythirion/approval-csharp-kata)
 
 <a href="https://www.youtube.com/watch?v=zyM2Ep28ED8" rel="Emily Bache's video">![Emily Bache's video](img/video.png)</a>
