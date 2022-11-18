@@ -1,12 +1,15 @@
 package com.gildedrose
 
-import com.github.writethemfirst.approvals.Approvals.verifyAllCombinations
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import org.approvaltests.combinations.CombinationApprovals.verifyAllCombinations
+import org.approvaltests.core.ApprovalFailureReporter
+import org.approvaltests.reporters.{QuietReporter, UseReporter}
+import org.junit.jupiter.api.Test
 
-class GildedRoseTest extends AnyFlatSpec with Matchers {
-  it should "update quality of items" in {
+@UseReporter(Array[ApprovalFailureReporter](classOf[QuietReporter]))
+class GildedRoseTest {
+  @Test def update_quality_of_items: Unit = {
     verifyAllCombinations(
+      (name, sellIn, quantity) => updateQuality(name, sellIn, quantity),
       Array[String](
         "a common item",
         "Aged Brie",
@@ -14,8 +17,7 @@ class GildedRoseTest extends AnyFlatSpec with Matchers {
         "Sulfuras, Hand of Ragnaros"
       ),
       Array[Integer](-100, -1, 0, 1, 2, 6, 8, 11),
-      Array[Integer](-1, 0, 1, 49, 50),
-      (name, sellIn, quantity) => updateQuality(name, sellIn, quantity)
+      Array[Integer](-1, 0, 1, 49, 50)
     )
   }
 

@@ -43,6 +43,7 @@ As many asserts than you check data
 ```
 
 With `Approval Testing`
+
 ```scala
 Approvals.verify(person)
 ```
@@ -131,6 +132,7 @@ Here is the result of the analysis:
 ![Decision Tree](img/decision-tree.png)
 
 The associated code:
+
 ```scala
 class GildedRose(val items: Array[Item]) {
   def updateQuality(): Unit = {
@@ -225,14 +227,38 @@ Let's do it in baby steps.
   }
 ```
 
-#### Let's use an approval test now
+#### Let's write an approval test now
 We will use the [`ApprovalTests`](https://approvaltests.com/) for covering our legacy code.
 
 ![Approval testing explained](img/approval-testing-cheatsheet.png)
 
-We start by adding the dependency in our `build.sbt`
+We will use [approvaltests](https://github.com/approvals/ApprovalTests.Java) library available for `java`.
+
+Add the dependency in your `build.sbt`:
+
 ```scala
-libraryDependencies += "com.github.writethemfirst" %% "approvals-scala" % "0.12.2" % "test"
+"com.approvaltests" % "approvaltests" % "18.5.0" % "test"
+```
+
+We can not use it with `scalatest` so we need to use 1 supported test runner.
+![Failure with scalatest](img/approvals-failure-scalatest.png)
+
+Let's use `junit5`, we must do 2 things for it (more info [here](https://github.com/sbt/sbt-jupiter-interface))
+
+- add the dependency in your `build.sbt`
+
+```scala
+libraryDependencies ++= Seq(
+  "net.aichler" % "jupiter-interface" % "0.11.1",
+  "com.approvaltests" % "approvaltests" % "18.5.0" % "test",
+  "org.scalatest" %% "scalatest" % "3.2.14" % "test"
+)
+```
+
+- add the plugin in the `plugins.sbt`
+
+```scala
+addSbtPlugin("net.aichler" % "sbt-jupiter-interface" % "0.11.1")
 ```
 
 :red_circle: Then we can use `verify` from our tests:
@@ -467,3 +493,8 @@ If you had to explain the main idea of the topic to someone else, what would you
 - [C# Approval kata](https://github.com/ythirion/approval-csharp-kata)
 
 <a href="https://www.youtube.com/watch?v=zyM2Ep28ED8" rel="Emily Bache's video">![Emily Bache's video](img/video.png)</a>
+
+
+
+
+SCRUBBING
