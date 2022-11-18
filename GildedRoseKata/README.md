@@ -256,6 +256,7 @@ libraryDependencies ++= Seq(
 ```
 
 - add the plugin in the `plugins.sbt`
+	- Ensure that we can run our `junit` tests with `sbt`
 
 ```scala
 addSbtPlugin("net.aichler" % "sbt-jupiter-interface" % "0.11.1")
@@ -279,8 +280,8 @@ The test should `fail`
 ![Failing Approval](img/failing-approval.png)
 
 ApprovalTests library compares 2 files :
-- `GildedRoseTest.files._anonfun_new_2.received` that has been generated based on what is inside the verify method call
-- `GildedRoseTest.files._anonfun_new_2.approved` a content that has already been approved
+- `GildedRoseTest.update_quality.received.txt` that has been generated based on what is inside the verify method call
+- `GildedRoseTest.update_quality.approved.txt` a content that has already been approved
   - Empty for now
 
 ![Compared files](img/compare-files.png)
@@ -289,10 +290,10 @@ The actual implementation is functionally good.
 So we must `approve` what is currently generated / calculated by the system.
 
 ```shell
-cat _anonfun_new_2.received > _anonfun_new_2.approved
+ cat GildedRoseTest.update_quality_of_items.received.txt > GildedRoseTest.update_quality_of_items.approved.txt
 ```
 
-Normally you should have file names corresponding to your test cases...
+File names correspond to your test cases...
 
 :green_circle: Run the test again.
 The received file should have been deleted. You should never commit this kind of file.
@@ -322,20 +323,20 @@ With `branch coverage` we now have `23%` of coverage
 #### Use Code Coverage and Combination
 We know that we have a lot of branches to cover.
 
-`Approvals` allow to combine a lot of inputs in the same Tests by using the method `verifyAllCombinations`
+`Approvals` allow to combine a lot of inputs in the same Tests by using the method `CombinationApprovals.verifyAllCombinations`
 
 ![Verify all combinations](img/verifyAllCombinations.png)
 
 :large_blue_circle: Refactor our test to use combinations
 
 ```scala
-class GildedRoseTest extends AnyFlatSpec with Matchers {
-  it should "update quality of a common item with approval" in {
-    Approvals.verifyAllCombinations(
+class GildedRoseTest {
+  @Test def update_quality(): Unit = {
+    verifyAllCombinations(
+      (name, sellIn, quantity) => updateQuality(name, sellIn, quantity),
       Array[String]("a common item"),
       Array[Integer](0),
-      Array[Integer](0),
-      (name, sellIn, quantity) => updateQuality(name, sellIn, quantity)
+      Array[Integer](0)
     )
   }
 
@@ -354,8 +355,9 @@ class GildedRoseTest extends AnyFlatSpec with Matchers {
 
 If you run the test, you should receive a result that looks like this:
 - When you use `combinations` it adds a description of the combination for each input
+
 ```text
-a common item, -1, 0 <== , a common item, 0, 0
+[a common item, 0, 0] => a common item, -1, 0 
 ```
 
 :green_circle: Approve it.
@@ -366,8 +368,9 @@ Use your code Code Coverage tool to discover test cases to add (Combination)
 
 At the end your test code should look like this:
 ```scala
-  it should "update quality of items" in {
+  @Test def update_quality(): Unit = {
     verifyAllCombinations(
+      (name, sellIn, quantity) => updateQuality(name, sellIn, quantity),
       Array[String](
         "a common item",
         "Aged Brie",
@@ -375,8 +378,7 @@ At the end your test code should look like this:
         "Sulfuras, Hand of Ragnaros"
       ),
       Array[Integer](-1, 0, 11),
-      Array[Integer](0, 1, 49, 50),
-      (name, sellIn, quantity) => updateQuality(name, sellIn, quantity)
+      Array[Integer](0, 1, 49, 50)
     )
   }
 ```
@@ -413,7 +415,16 @@ To run an analysis
 sbt stryker
 ```
 
-- We have `100%` coverage but a Mutation Score of `73.91%`
+#### Fix diff tool opening
+`ApprovalTests` open your default merge tool when tests are failing, it is not very convenient for CI or Mutation tests purpose...
+
+We can change this behavior by specifying a `QuietReporter` :
+```scala
+// Use QuietReporter for CI purpose -> not try to open a diff tool
+@UseReporter(Array[ApprovalFailureReporter](classOf[QuietReporter]))
+```
+
+- We have `100%` coverage but a Mutation Score of `75.36%`
 - You can find the generated report in `target/stryker4s-report/<timestamp>/index.html`
   - You can understand which mutants have been created for the class by clicking on red dots
 
@@ -425,9 +436,19 @@ Let's kill some mutants by adding combinations
 To reach `100%` Mutation Score, your test should look like this
 
 ```scala
-class GildedRoseTest extends AnyFlatSpec with Matchers {
-  it should "update quality of items" in {
+package com.gildedrose
+
+import org.approvaltests.combinations.CombinationApprovals.verifyAllCombinations
+import org.approvaltests.core.ApprovalFailureReporter
+import org.approvaltests.reporters.{QuietReporter, UseReporter}
+import org.junit.jupiter.api.Test
+
+class GildedRoseTest {
+  // Use QuietReporter for CI purpose -> not try to open a diff tool
+  @UseReporter(Array[ApprovalFailureReporter](classOf[QuietReporter]))
+  @Test def update_quality(): Unit = {
     verifyAllCombinations(
+      (name, sellIn, quantity) => updateQuality(name, sellIn, quantity),
       Array[String](
         "a common item",
         "Aged Brie",
@@ -435,8 +456,7 @@ class GildedRoseTest extends AnyFlatSpec with Matchers {
         "Sulfuras, Hand of Ragnaros"
       ),
       Array[Integer](-100, -1, 0, 1, 2, 6, 8, 11),
-      Array[Integer](-1, 0, 1, 49, 50),
-      (name, sellIn, quantity) => updateQuality(name, sellIn, quantity)
+      Array[Integer](-1, 0, 1, 49, 50)
     )
   }
 
@@ -493,8 +513,3 @@ If you had to explain the main idea of the topic to someone else, what would you
 - [C# Approval kata](https://github.com/ythirion/approval-csharp-kata)
 
 <a href="https://www.youtube.com/watch?v=zyM2Ep28ED8" rel="Emily Bache's video">![Emily Bache's video](img/video.png)</a>
-
-
-
-
-SCRUBBING
