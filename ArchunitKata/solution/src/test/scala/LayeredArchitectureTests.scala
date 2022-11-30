@@ -15,6 +15,7 @@ object LayeredArchitectureTests {
   private val dal = "DAL"
 
   private val `layered architecture is respected`: ArchRule = layeredArchitecture()
+    .consideringAllDependencies()
     .layer(controller).definedBy("..controller..")
     .layer(service).definedBy("..service..")
     .layer(model).definedBy("..model..")
