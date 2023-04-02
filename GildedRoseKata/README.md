@@ -505,6 +505,7 @@ If you had to explain the main idea of the topic to someone else, what would you
   - Easy to set expectations for a given HTTP route
 
 ## Resources 
+- [Java explanations](https://yoan-thirion.gitbook.io/knowledge-base/software-craftsmanship/code-katas/gilded-rose-approval-testing)
 - [Approval Tests](https://approvaltests.com/)
 - [Understand Legacy Code - Approval Testing](https://understandlegacycode.com/approval-tests)
 - [Mutation Testing](https://xtrem-tdd.netlify.app/Flavours/mutation-testing)
