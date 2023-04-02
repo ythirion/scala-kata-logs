@@ -35,3 +35,6 @@ A    A      A         A
 > With property based testing :)
 
 Focus on results properties and implement from less to more complex 
+
+# Solution
+A solution designed using [Property-Based Testing](https://xtrem-tdd.netlify.app/Flavours/pbt) is available [here](https://github.com/ythirion/crappy-driven-development/tree/main/src/scala/diamond)
